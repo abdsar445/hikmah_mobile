@@ -1,0 +1,57 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+
+      - name: Clean & Restructure Project
+        run: |
+          # The repository is missing Android scaffold. We will generate it.
+          echo "Generating brand new Flutter project scaffold..."
+          flutter create scaffold_app
+          
+          # Replace default lib with our lib
+          rm -rf scaffold_app/lib
+          cp -r lib scaffold_app/lib
+          
+          # Replace default pubspec with our generated pubspec
+          cp pubspec.yaml scaffold_app/pubspec.yaml
+
+      - name: Install Dependencies
+        run: |
+          cd scaffold_app
+          flutter pub get
+
+      - name: Build APK File
+        run: |
+          cd scaffold_app
+          flutter build apk --release
+
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hikmah-app-release
+          path: scaffold_app/build/app/outputs/flutter-apk/app-release.apk
