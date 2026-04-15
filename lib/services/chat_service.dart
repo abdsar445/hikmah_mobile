@@ -6,20 +6,20 @@ class ChatService {
   final String baseUrl = "https://abdsar445-hikmah-backend.hf.space/api/v1";
 
   Future<String> sendMessageToBackend(String text) async {
-    final url = Uri.parse("$baseUrl/chat");
+    final url = Uri.parse("$baseUrl/chat/ask");
 
     try {
       final response = await http
           .post(
             url,
             headers: {"Content-Type": "application/json"},
-            body: jsonEncode({"text": text}),
+            body: jsonEncode({"question": text}),
           )
           .timeout(const Duration(seconds: 90)); // Increased timeout for Render Free Tier cold starts
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['reply'] ?? "The AI did not provide a response.";
+        return data['answer'] ?? "The AI did not provide a response.";
       } else {
         return "Server Error: ${response.statusCode}";
       }
