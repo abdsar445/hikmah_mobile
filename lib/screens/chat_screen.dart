@@ -196,14 +196,23 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(height: 6),
               ...sources.take(3).map((source) {
                 if (source is Map<String, dynamic>) {
-                  final hadithNumber = source['hadith_number']?.toString();
-                  final narrator = source['narrator']?.toString();
-                  final arabicText = source['arabic_text']?.toString();
-                  final translationEn = source['translation_en']?.toString();
-                  final text = source['text']?.toString() ?? source['matn']?.toString() ?? '';
-                  final collection = source['collection']?.toString();
-                  final book = source['book']?.toString();
-                  final grade = source['grade']?.toString();
+                  final metadata = source['metadata'] is Map<String, dynamic>
+                      ? Map<String, dynamic>.from(source['metadata'] as Map<String, dynamic>)
+                      : <String, dynamic>{};
+
+                  String? getSourceField(String key) {
+                    final value = source[key] ?? metadata[key];
+                    return value?.toString();
+                  }
+
+                  final hadithNumber = getSourceField('hadith_number');
+                  final narrator = getSourceField('narrator');
+                  final arabicText = getSourceField('arabic_text');
+                  final translationEn = getSourceField('translation_en');
+                  final text = getSourceField('text') ?? getSourceField('matn') ?? '';
+                  final collection = getSourceField('collection');
+                  final book = getSourceField('book');
+                  final grade = getSourceField('grade');
 
                   final header = hadithNumber != null && hadithNumber.isNotEmpty
                       ? 'According to Hadith No. $hadithNumber'
@@ -215,9 +224,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       ? (collection != null && collection.isNotEmpty
                           ? '$book • $collection'
                           : book)
-                      : (collection ?? 'Unknown source');
-
-                  return Padding(
+                      : (collection != null && collection.isNotEmpty
+                          ? collection
+                          : 'Unknown source');
                     padding: const EdgeInsets.only(top: 6),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

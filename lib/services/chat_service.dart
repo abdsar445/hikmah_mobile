@@ -8,11 +8,20 @@ class ChatResponse {
   ChatResponse({required this.answer, this.sources = const []});
 
   factory ChatResponse.fromJson(Map<String, dynamic> json) {
-    final sources = json['sources'];
+    final sourcesRaw = json['sources'];
     final parsedSources = <Map<String, dynamic>>[];
+    List<dynamic>? sourceList;
 
-    if (sources is List) {
-      for (final item in sources) {
+    if (sourcesRaw is List) {
+      sourceList = sourcesRaw;
+    } else if (sourcesRaw is Map<String, dynamic> && sourcesRaw['results'] is List) {
+      sourceList = sourcesRaw['results'] as List<dynamic>;
+    } else if (sourcesRaw is Map<String, dynamic>) {
+      sourceList = [sourcesRaw];
+    }
+
+    if (sourceList != null) {
+      for (final item in sourceList) {
         if (item is Map) {
           parsedSources.add(Map<String, dynamic>.from(item));
         }
