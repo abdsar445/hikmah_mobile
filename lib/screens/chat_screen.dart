@@ -278,7 +278,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            translationEn?.isNotEmpty == true ? translationEn : text,
+                            translationEn != null && translationEn.isNotEmpty ? translationEn : text,
                             style: TextStyle(
                               color: isUser || isDark ? Colors.white70 : Colors.black87,
                               fontSize: 14,
