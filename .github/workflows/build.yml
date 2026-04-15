@@ -42,6 +42,11 @@ jobs:
           
           # Rename the Android App properly
           sed -i 's/android:label="scaffold_app"/android:label="Hikmah AI"/g' scaffold_app/android/app/src/main/AndroidManifest.xml
+          
+          # Inject Firebase Database Configurations natively
+          cp google-services.json scaffold_app/android/app/
+          echo "apply plugin: 'com.google.gms.google-services'" >> scaffold_app/android/app/build.gradle
+          sed -i '/com.android.tools.build:gradle/a \        classpath "com.google.gms:google-services:4.4.1"' scaffold_app/android/build.gradle || true
 
       - name: Install Dependencies
         run: |

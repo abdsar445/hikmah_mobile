@@ -97,14 +97,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Offline Mode Activated (Firebase Unconfigured)"),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: Text("Guest Login Error: $e"),
+            backgroundColor: Colors.orange,
           ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       }
     } finally {

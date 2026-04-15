@@ -14,11 +14,7 @@ final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint("Firebase Offline Bypass: $e");
-  }
+  await Firebase.initializeApp();
 
   // --- 1. LOAD SAVED THEME (YEH NAYA CODE HAI) ---
   // App start hone se pehle check karega ke Dark Mode on tha ya nahi

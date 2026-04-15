@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "249707689492",
+    "project_id": "hikmah-1ba38",
+    "storage_bucket": "hikmah-1ba38.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249707689492:android:3d6983f9b71d7324c85901",
+        "android_client_info": {
+          "package_name": "com.abdsar445.hikmah_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBczMTfZJvlZHB1k1XZhRhGZ80nzip2f8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
