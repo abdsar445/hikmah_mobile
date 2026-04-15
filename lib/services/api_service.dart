@@ -31,7 +31,7 @@ class ApiService {
     } catch (e) {
       // Agar connection nahi ban pata (e.g. Server band hai)
       print("Connection Error: $e");
-      return "Dimaag (Python Server) band hai. Pehle 'uvicorn' wali command chala kar use on karein.";
+      return "Connection Error: The Python Server is offline. Please start it using uvicorn.";
     }
   }
 }

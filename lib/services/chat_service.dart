@@ -19,13 +19,13 @@ class ChatService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['reply'] ?? "AI ne koi jawab nahi diya.";
+        return data['reply'] ?? "The AI did not provide a response.";
       } else {
         return "Server Error: ${response.statusCode}";
       }
     } catch (e) {
       // ERROR FIX: Hamesha String return karein taake 'Null' error na aaye
-      return "Connection Error: Check karein ke Uvicorn chal raha hai? $e";
+      return "Connection Error: Please verify the server is running. $e";
     }
   }
 

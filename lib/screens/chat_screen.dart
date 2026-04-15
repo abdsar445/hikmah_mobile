@@ -51,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       setState(() {
         _messages.insert(0, {
-          "message_text": "Connection Error: Backend server on hai? ⚠️",
+          "message_text": "Connection Error: Is the backend server running? ⚠️",
           "sender": "bot",
         });
       });
@@ -128,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "Hikmah AI soch raha hai... 🤔",
+                "Hikmah AI is thinking... 🤔",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
@@ -217,7 +217,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       controller: _controller,
                       focusNode: _focusNode,
                       decoration: const InputDecoration(
-                        hintText: "Islam ke bare mein puchen...",
+                        hintText: "Ask about Islam...",
                         border: InputBorder.none,
                       ),
                       onSubmitted: (_) => _handleSendMessage(),
