@@ -45,6 +45,14 @@ jobs:
           cd scaffold_app
           flutter pub get
 
+      - name: Patch Android SDK Versions
+        run: |
+          cd scaffold_app/android/app
+          sed -i 's/flutter.minSdkVersion/23/g' build.gradle
+          sed -i 's/minSdkVersion 21/minSdkVersion 23/g' build.gradle
+          sed -i 's/flutter.compileSdkVersion/35/g' build.gradle
+          sed -i 's/compileSdkVersion 34/compileSdkVersion 35/g' build.gradle
+
       - name: Build APK File
         run: |
           cd scaffold_app
