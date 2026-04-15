@@ -52,6 +52,12 @@ jobs:
           sed -i 's/minSdkVersion 21/minSdkVersion 23/g' build.gradle
           sed -i 's/flutter.compileSdkVersion/34/g' build.gradle
           sed -i 's/compileSdkVersion 33/compileSdkVersion 34/g' build.gradle
+          
+          cd ../
+          # Modern Flutter (Settings.gradle)
+          sed -i 's/id "org.jetbrains.kotlin.android" version ".*" apply false/id "org.jetbrains.kotlin.android" version "1.9.22" apply false/g' settings.gradle || true
+          # Legacy Flutter (Build.gradle)
+          sed -i "s/ext.kotlin_version = '.*'/ext.kotlin_version = '1.9.22'/g" build.gradle || true
 
       - name: Build APK File
         run: |
