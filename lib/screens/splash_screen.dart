@@ -32,17 +32,20 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _checkUserLogin() {
-    // Check karein ke user pehle se logged in hai?
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // Agar Logged In hai -> Direct Home Screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-    } else {
-      // Agar Nahi hai -> Login Screen
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    } catch (e) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),

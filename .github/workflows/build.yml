@@ -39,6 +39,9 @@ jobs:
           
           # Replace default pubspec with our generated pubspec
           cp pubspec.yaml scaffold_app/pubspec.yaml
+          
+          # Rename the Android App properly
+          sed -i 's/android:label="scaffold_app"/android:label="Hikmah AI"/g' scaffold_app/android/app/src/main/AndroidManifest.xml
 
       - name: Install Dependencies
         run: |
