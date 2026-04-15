@@ -40,6 +40,14 @@ jobs:
           # Replace default pubspec with our generated pubspec
           cp pubspec.yaml scaffold_app/pubspec.yaml
           
+          # Replace Android App Icon across all resolutions
+          cp app_icon.png scaffold_app/android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          cp app_icon.png scaffold_app/android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp app_icon.png scaffold_app/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          cp app_icon.png scaffold_app/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          cp app_icon.png scaffold_app/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          rm -f scaffold_app/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml || true
+          
           # Rename the Android App properly
           sed -i 's/android:label="scaffold_app"/android:label="Hikmah AI"/g' scaffold_app/android/app/src/main/AndroidManifest.xml
           
