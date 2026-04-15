@@ -46,13 +46,18 @@ class _ChatScreenState extends State<ChatScreen> {
       final aiResponse = await _chatService.sendMessageToBackend(text);
 
       setState(() {
-        _messages.insert(0, {"message_text": aiResponse, "sender": "bot"});
+        _messages.insert(0, {
+          "message_text": aiResponse.answer,
+          "sender": "bot",
+          "sources": aiResponse.sources,
+        });
       });
     } catch (e) {
       setState(() {
         _messages.insert(0, {
           "message_text": "Connection Error: Is the backend server running? ⚠️",
           "sender": "bot",
+          "sources": [],
         });
       });
     } finally {
@@ -144,6 +149,8 @@ class _ChatScreenState extends State<ChatScreen> {
     Color primary,
   ) {
     bool isUser = data['sender'] == 'user';
+    final sources = data['sources'] as List<dynamic>?;
+
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -166,12 +173,66 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ],
         ),
-        child: Text(
-          data['message_text'] ?? "",
-          style: TextStyle(
-            color: isUser || isDark ? Colors.white : Colors.black87,
-            fontSize: 16,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              data['message_text'] ?? "",
+              style: TextStyle(
+                color: isUser || isDark ? Colors.white : Colors.black87,
+                fontSize: 16,
+              ),
+            ),
+            if (!isUser && sources != null && sources.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                "Sources:",
+                style: TextStyle(
+                  color: isUser || isDark ? Colors.white70 : Colors.black54,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 6),
+              ...sources.take(3).map((source) {
+                if (source is Map<String, dynamic>) {
+                  final book = source['book']?.toString();
+                  final collection = source['collection']?.toString();
+                  final hadithNumber = source['hadith_number']?.toString();
+                  final text = source['text']?.toString() ?? source['translation_en']?.toString() ?? source['matn']?.toString() ?? '';
+                  final titleParts = [if (book != null && book.isNotEmpty) book, if (collection != null && collection.isNotEmpty) collection, if (hadithNumber != null && hadithNumber.isNotEmpty) '#$hadithNumber'];
+                  final title = titleParts.isNotEmpty ? titleParts.join(' • ') : 'Hadith source';
+                  final preview = text.length > 80 ? '${text.substring(0, 80)}...' : text;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: isUser || isDark ? Colors.white70 : Colors.black54,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (preview.isNotEmpty)
+                          Text(
+                            preview,
+                            style: TextStyle(
+                              color: isUser || isDark ? Colors.white70 : Colors.black87,
+                              fontSize: 13,
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              }).toList(),
+            ],
+          ],
         ),
       ),
     );

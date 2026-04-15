@@ -1,11 +1,36 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+class ChatResponse {
+  final String answer;
+  final List<Map<String, dynamic>> sources;
+
+  ChatResponse({required this.answer, this.sources = const []});
+
+  factory ChatResponse.fromJson(Map<String, dynamic> json) {
+    final sources = json['sources'];
+    final parsedSources = <Map<String, dynamic>>[];
+
+    if (sources is List) {
+      for (final item in sources) {
+        if (item is Map) {
+          parsedSources.add(Map<String, dynamic>.from(item));
+        }
+      }
+    }
+
+    return ChatResponse(
+      answer: json['answer']?.toString() ?? 'The AI did not provide a response.',
+      sources: parsedSources,
+    );
+  }
+}
+
 class ChatService {
   // 1. Ensure karein ke port :8000 lazmi ho
   final String baseUrl = "https://abdsar445-hikmah-backend.hf.space/api/v1";
 
-  Future<String> sendMessageToBackend(String text) async {
+  Future<ChatResponse> sendMessageToBackend(String text) async {
     final url = Uri.parse("$baseUrl/chat/ask");
 
     try {
@@ -19,13 +44,14 @@ class ChatService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['answer'] ?? "The AI did not provide a response.";
+        return ChatResponse.fromJson(data);
       } else {
-        return "Server Error: ${response.statusCode}";
+        return ChatResponse(answer: "Server Error: ${response.statusCode}");
       }
     } catch (e) {
-      // ERROR FIX: Hamesha String return karein taake 'Null' error na aaye
-      return "Connection Error: Please verify the server is running. $e";
+      return ChatResponse(
+        answer: "Connection Error: Please verify the server is running. $e",
+      );
     }
   }
 

@@ -10,26 +10,21 @@ class ApiService {
   // --- ASK AI FUNCTION ---
   Future<String> askAI(String question) async {
     try {
-      // Python backend ke '/chat' endpoint par POST request bhejna
       final response = await http.post(
-        Uri.parse("$baseUrl/chat"),
+        Uri.parse("$baseUrl/chat/ask"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "text":
-              question, // Python backend yahan 'text' field ka wait kar raha hai
+          "question": question,
         }),
       );
 
       if (response.statusCode == 200) {
-        // Agar response sahi hai toh JSON ko parse karein
         final Map<String, dynamic> data = jsonDecode(response.body);
-        return data['response']; // Python se aya hua jawab
+        return data['answer'] ?? "The AI did not provide a response.";
       } else {
-        // Agar server koi error deta hai
         return "Server Error: ${response.statusCode}";
       }
     } catch (e) {
-      // Agar connection nahi ban pata (e.g. Server band hai)
       print("Connection Error: $e");
       return "Connection Error: The Python Server is offline. Please start it using uvicorn.";
     }
