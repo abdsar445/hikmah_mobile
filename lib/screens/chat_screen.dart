@@ -227,6 +227,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       : (collection != null && collection.isNotEmpty
                           ? collection
                           : 'Unknown source');
+
+                  return Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
