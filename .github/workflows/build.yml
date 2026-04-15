@@ -29,9 +29,10 @@ jobs:
 
       - name: Clean & Restructure Project
         run: |
-          # The repository is missing Android scaffold. We will generate it.
+          # The repository is missing Android scaffold. We will generate it natively with the exact Firebase namespace
           echo "Generating brand new Flutter project scaffold..."
-          flutter create scaffold_app
+          flutter create --org com.abdsar445 hikmah_app
+          mv hikmah_app scaffold_app
           
           # Replace default lib with our lib
           rm -rf scaffold_app/lib
@@ -49,11 +50,7 @@ jobs:
           rm -f scaffold_app/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml || true
           
           # Rename the Android App properly
-          sed -i 's/android:label="scaffold_app"/android:label="Hikmah AI"/g' scaffold_app/android/app/src/main/AndroidManifest.xml
-          
-          # Fix package name mismatch for Firebase
-          sed -i 's/applicationId "com.example.scaffold_app"/applicationId "com.abdsar445.hikmah_app"/g' scaffold_app/android/app/build.gradle
-          sed -i 's/namespace "com.example.scaffold_app"/namespace "com.abdsar445.hikmah_app"/g' scaffold_app/android/app/build.gradle
+          sed -i 's/android:label="hikmah_app"/android:label="Hikmah AI"/g' scaffold_app/android/app/src/main/AndroidManifest.xml
           
           # Inject Firebase Database Configurations natively
           cp google-services.json scaffold_app/android/app/
