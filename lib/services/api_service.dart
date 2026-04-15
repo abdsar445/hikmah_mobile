@@ -5,7 +5,7 @@ class ApiService {
   // --- SERVER ADDRESS ---
   // 10.0.2.2 Android Emulator ke liye computer ka 'localhost' hota hai.
   // Agar aap real phone use kar rahe hain toh computer ka IP address use karein.
-  final String baseUrl = "https://hikmah-backend-vzxd.onrender.com/api/v1";
+  final String baseUrl = "https://abdsar445-hikmah-backend.hf.space/api/v1";
 
   // --- ASK AI FUNCTION ---
   Future<String> askAI(String question) async {
