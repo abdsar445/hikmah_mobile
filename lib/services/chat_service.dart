@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ChatService {
   // 1. Ensure karein ke port :8000 lazmi ho
-  final String baseUrl = "https://hikmah-backend-vzxd.onrender.com/api/v1";
+  final String baseUrl = "https://abdsar445-hikmah-backend.hf.space/api/v1";
 
   Future<String> sendMessageToBackend(String text) async {
     final url = Uri.parse("$baseUrl/chat");
