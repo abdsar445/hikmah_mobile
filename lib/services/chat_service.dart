@@ -15,7 +15,7 @@ class ChatService {
             headers: {"Content-Type": "application/json"},
             body: jsonEncode({"text": text}),
           )
-          .timeout(const Duration(seconds: 10)); // Timeout lazmi lagayein
+          .timeout(const Duration(seconds: 90)); // Increased timeout for Render Free Tier cold starts
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
