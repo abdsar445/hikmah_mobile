@@ -30,7 +30,37 @@ class ChatService {
   // 1. Ensure karein ke port :8000 lazmi ho
   final String baseUrl = "https://abdsar445-hikmah-backend.hf.space/api/v1";
 
+  bool _isGreeting(String text) {
+    final normalized = text.toLowerCase().trim();
+    final greetings = {
+      'hi',
+      'hello',
+      'hey',
+      'salam',
+      'assalamualaikum',
+      'assalamu alaikum',
+      'how are you',
+      'good morning',
+      'good afternoon',
+      'good evening',
+    };
+
+    if (greetings.contains(normalized)) {
+      return true;
+    }
+
+    final words = normalized.split(RegExp(r'\s+'));
+    return words.isNotEmpty && greetings.contains(words.first);
+  }
+
   Future<ChatResponse> sendMessageToBackend(String text) async {
+    if (_isGreeting(text)) {
+      return ChatResponse(
+        answer: "Wa alaikum assalam! I am Himak, your Islamic Hadith assistant. Ask me about authentic Hadith and I will answer from the sources.",
+        sources: [],
+      );
+    }
+
     final url = Uri.parse("$baseUrl/chat/ask");
 
     try {
