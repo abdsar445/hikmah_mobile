@@ -196,13 +196,26 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(height: 6),
               ...sources.take(3).map((source) {
                 if (source is Map<String, dynamic>) {
-                  final book = source['book']?.toString();
-                  final collection = source['collection']?.toString();
                   final hadithNumber = source['hadith_number']?.toString();
-                  final text = source['text']?.toString() ?? source['translation_en']?.toString() ?? source['matn']?.toString() ?? '';
-                  final titleParts = [if (book != null && book.isNotEmpty) book, if (collection != null && collection.isNotEmpty) collection, if (hadithNumber != null && hadithNumber.isNotEmpty) '#$hadithNumber'];
-                  final title = titleParts.isNotEmpty ? titleParts.join(' • ') : 'Hadith source';
-                  final preview = text.length > 80 ? '${text.substring(0, 80)}...' : text;
+                  final narrator = source['narrator']?.toString();
+                  final arabicText = source['arabic_text']?.toString();
+                  final translationEn = source['translation_en']?.toString();
+                  final text = source['text']?.toString() ?? source['matn']?.toString() ?? '';
+                  final collection = source['collection']?.toString();
+                  final book = source['book']?.toString();
+                  final grade = source['grade']?.toString();
+
+                  final header = hadithNumber != null && hadithNumber.isNotEmpty
+                      ? 'According to Hadith No. $hadithNumber'
+                      : 'Hadith source';
+                  final narration = narrator != null && narrator.isNotEmpty
+                      ? 'Narrated by $narrator'
+                      : null;
+                  final sourceLine = book != null && book.isNotEmpty
+                      ? (collection != null && collection.isNotEmpty
+                          ? '$book • $collection'
+                          : book)
+                      : (collection ?? 'Unknown source');
 
                   return Padding(
                     padding: const EdgeInsets.only(top: 6),
@@ -210,21 +223,68 @@ class _ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          header,
                           style: TextStyle(
-                            color: isUser || isDark ? Colors.white70 : Colors.black54,
+                            color: isUser || isDark ? Colors.white70 : Colors.black87,
                             fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (preview.isNotEmpty)
+                        const SizedBox(height: 2),
+                        if (narration != null)
                           Text(
-                            preview,
+                            narration,
                             style: TextStyle(
-                              color: isUser || isDark ? Colors.white70 : Colors.black87,
-                              fontSize: 13,
+                              color: isUser || isDark ? Colors.white60 : Colors.black54,
+                              fontSize: 12,
                             ),
                           ),
+                        if (sourceLine.isNotEmpty)
+                          Text(
+                            sourceLine,
+                            style: TextStyle(
+                              color: isUser || isDark ? Colors.white54 : Colors.black45,
+                              fontSize: 12,
+                            ),
+                          ),
+                        if ((arabicText ?? '').isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            'Arabic hadith:',
+                            style: TextStyle(
+                              color: isUser || isDark ? Colors.white70 : Colors.black54,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            arabicText!,
+                            style: TextStyle(
+                              color: isUser || isDark ? Colors.white70 : Colors.black87,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                        if ((translationEn ?? '').isNotEmpty || text.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            'In English:',
+                            style: TextStyle(
+                              color: isUser || isDark ? Colors.white70 : Colors.black54,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            translationEn?.isNotEmpty == true ? translationEn : text,
+                            style: TextStyle(
+                              color: isUser || isDark ? Colors.white70 : Colors.black87,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   );
