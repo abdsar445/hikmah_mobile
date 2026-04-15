@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <--- YEH ZAROORI HAI
+import 'firebase_options.dart'; // <--- FIREBASE DART CONFIG
 
 // --- IMPORTS ---
 import 'screens/splash_screen.dart';
@@ -14,7 +15,11 @@ final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  } catch (e) {
+    debugPrint("Firebase Init Bug: $e");
+  }
 
   // --- 1. LOAD SAVED THEME (YEH NAYA CODE HAI) ---
   // App start hone se pehle check karega ke Dark Mode on tha ya nahi
