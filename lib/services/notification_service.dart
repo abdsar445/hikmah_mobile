@@ -82,15 +82,17 @@ class NotificationService {
     const iosDetails = DarwinNotificationDetails();
 
     await _notificationsPlugin.zonedSchedule(
-      id: 10,
-      title: 'Daily Hadith',
-      body: 'Open Hikmah AI to read today\'s hadith.',
-      scheduledDate: scheduledDate,
-      notificationDetails: const NotificationDetails(
+      10,
+      'Daily Hadith',
+      'Open Hikmah AI to read today\'s hadith.',
+      scheduledDate,
+      const NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -174,11 +176,11 @@ class NotificationService {
 
         if (scheduledDate.isAfter(now)) {
           await _notificationsPlugin.zonedSchedule(
-            id: id,
-            title: 'Prayer Reminder: $title',
-            body: 'It\'s time for $title prayer. Stay on track with Hikmah AI.',
-            scheduledDate: scheduledDate,
-            notificationDetails: const NotificationDetails(
+            id,
+            'Prayer Reminder: $title',
+            'It\'s time for $title prayer. Stay on track with Hikmah AI.',
+            scheduledDate,
+            const NotificationDetails(
               android: AndroidNotificationDetails(
                 'prayer_reminder_channel',
                 'Prayer Alerts',
@@ -189,7 +191,9 @@ class NotificationService {
               ),
               iOS: DarwinNotificationDetails(),
             ),
-            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+            androidAllowWhileIdle: true,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime,
           );
         }
       }
