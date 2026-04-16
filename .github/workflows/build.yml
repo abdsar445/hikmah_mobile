@@ -75,7 +75,7 @@ jobs:
             export PATH="$SDK_ROOT/cmdline-tools/latest/bin:$PATH"
           fi
 
-          yes | sdkmanager --sdk_root="$SDK_ROOT" "platforms;android-35" "build-tools;35.0.3" "platform-tools"
+          yes | sdkmanager --sdk_root="$SDK_ROOT" "platforms;android-35" "build-tools;35.0.2" "platform-tools"
 
           cd scaffold_app/android/app
           sed -i 's/flutter.minSdkVersion/23/g' build.gradle
