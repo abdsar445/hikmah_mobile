@@ -90,7 +90,8 @@ class NotificationService {
         android: androidDetails,
         iOS: iosDetails,
       ),
-      DateTimeComponents.time,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
@@ -188,6 +189,7 @@ class NotificationService {
               ),
               iOS: DarwinNotificationDetails(),
             ),
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }
       }
