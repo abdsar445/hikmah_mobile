@@ -52,6 +52,10 @@ jobs:
           # Rename the Android App properly
           sed -i 's/android:label="hikmah_app"/android:label="Hikmah AI"/g' scaffold_app/android/app/src/main/AndroidManifest.xml
           
+          # Fix minSdkVersion error for Firebase Firestore
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 23/g' scaffold_app/android/app/build.gradle
+          sed -i 's/minSdkVersion 21/minSdkVersion 23/g' scaffold_app/android/app/build.gradle
+          
           # Inject Missing Release Internet Permissions
           sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET"/>' scaffold_app/android/app/src/main/AndroidManifest.xml
 
