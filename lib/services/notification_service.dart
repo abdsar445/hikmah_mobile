@@ -1,5 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:geolocator/geolocator.dart';
@@ -24,8 +23,12 @@ class NotificationService {
     await _notificationsPlugin.initialize(initSettings);
     tz.initializeTimeZones();
 
-    final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+    try {
+      final String timeZoneName = DateTime.now().timeZoneName;
+      tz.setLocalLocation(tz.getLocation(timeZoneName));
+    } catch (_) {
+      // Fallback to the default local timezone if the zone name is not IANA.
+    }
   }
 
   Future<void> showNotification({
