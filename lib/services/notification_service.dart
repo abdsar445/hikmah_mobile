@@ -90,10 +90,7 @@ class NotificationService {
         android: androidDetails,
         iOS: iosDetails,
       ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
+      DateTimeComponents.time,
     );
   }
 
@@ -191,9 +188,6 @@ class NotificationService {
               ),
               iOS: DarwinNotificationDetails(),
             ),
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime,
           );
         }
       }
