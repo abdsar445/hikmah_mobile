@@ -15,7 +15,6 @@ import 'namaz_guide_screen.dart';
 import 'janaza_guide_screen.dart';
 import 'hajj_umrah_guide_screen.dart';
 import 'kalimas_screen.dart';
-import 'topics_screen.dart';
 
 class ToolsScreen extends StatelessWidget {
   const ToolsScreen({super.key});
@@ -122,15 +121,6 @@ class ToolsScreen extends StatelessWidget {
                   Icons.explore,
                   Colors.orange[800]!,
                   const QiblaScreen(),
-                  cardColor,
-                  textColor,
-                ),
-                _buildToolTile(
-                  context,
-                  "Topics",
-                  Icons.menu_book,
-                  Colors.green[700]!,
-                  const TopicsScreen(),
                   cardColor,
                   textColor,
                 ),
