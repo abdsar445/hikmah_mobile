@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'topics_screen.dart'; // Topics screen par jane ke liye import
 
 class BooksmarksScreen extends StatefulWidget {
   const BooksmarksScreen({super.key});
@@ -34,20 +33,6 @@ class _BooksmarksScreenState extends State<BooksmarksScreen> {
         foregroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
-      ),
-
-      // --- PLUS BUTTON (Floating Action Button) ---
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Topics screen par navigate karne ke liye
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const TopicsScreen()),
-          );
-        },
-        backgroundColor: primaryColor,
-        elevation: 4,
-        child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
 
       body: StreamBuilder<User?>(
