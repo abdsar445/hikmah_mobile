@@ -60,9 +60,22 @@ jobs:
           cd scaffold_app
           flutter pub get
 
-      - name: Patch Android SDK Versions
+      - name: Install Android command line tools and SDK 35
         run: |
-          yes | sdkmanager "platforms;android-35" "build-tools;35.0.3" "platform-tools"
+          SDK_ROOT=${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}
+          export PATH="$SDK_ROOT/cmdline-tools/latest/bin:$PATH"
+
+          if ! command -v sdkmanager >/dev/null 2>&1; then
+            mkdir -p "$SDK_ROOT/cmdline-tools"
+            cd /tmp
+            curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+            unzip -q commandlinetools.zip
+            mkdir -p "$SDK_ROOT/cmdline-tools/latest"
+            mv cmdline-tools/* "$SDK_ROOT/cmdline-tools/latest/"
+            export PATH="$SDK_ROOT/cmdline-tools/latest/bin:$PATH"
+          fi
+
+          yes | sdkmanager --sdk_root="$SDK_ROOT" "platforms;android-35" "build-tools;35.0.3" "platform-tools"
 
           cd scaffold_app/android/app
           sed -i 's/flutter.minSdkVersion/23/g' build.gradle
