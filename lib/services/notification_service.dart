@@ -22,13 +22,7 @@ class NotificationService {
 
     await _notificationsPlugin.initialize(initSettings);
     tz.initializeTimeZones();
-
-    try {
-      final String timeZoneName = DateTime.now().timeZoneName;
-      tz.setLocalLocation(tz.getLocation(timeZoneName));
-    } catch (_) {
-      // Fallback to the default local timezone if the zone name is not IANA.
-    }
+    tz.setLocalLocation(tz.local);
   }
 
   Future<void> showNotification({
@@ -88,17 +82,15 @@ class NotificationService {
     const iosDetails = DarwinNotificationDetails();
 
     await _notificationsPlugin.zonedSchedule(
-      10,
-      'Daily Hadith',
-      'Open Hikmah AI to read today\'s hadith.',
-      scheduledDate,
-      const NotificationDetails(
+      id: 10,
+      title: 'Daily Hadith',
+      body: 'Open Hikmah AI to read today\'s hadith.',
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -131,7 +123,7 @@ class NotificationService {
         params,
       );
 
-      final prayerSchedule = <int, Map<String, DateTime>>{
+      final prayerSchedule = <int, Map<String, dynamic>>{
         101: {
           'title': 'Fajr',
           'time': todayPrayerTimes.fajr,
@@ -182,11 +174,11 @@ class NotificationService {
 
         if (scheduledDate.isAfter(now)) {
           await _notificationsPlugin.zonedSchedule(
-            id,
-            'Prayer Reminder: $title',
-            'It\'s time for $title prayer. Stay on track with Hikmah AI.',
-            scheduledDate,
-            const NotificationDetails(
+            id: id,
+            title: 'Prayer Reminder: $title',
+            body: 'It\'s time for $title prayer. Stay on track with Hikmah AI.',
+            scheduledDate: scheduledDate,
+            notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
                 'prayer_reminder_channel',
                 'Prayer Alerts',
@@ -197,9 +189,7 @@ class NotificationService {
               ),
               iOS: DarwinNotificationDetails(),
             ),
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           );
         }
       }
