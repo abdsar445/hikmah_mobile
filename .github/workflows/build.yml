@@ -62,6 +62,8 @@ jobs:
 
       - name: Patch Android SDK Versions
         run: |
+          yes | sdkmanager "platforms;android-35" "build-tools;35.0.3" "platform-tools"
+
           cd scaffold_app/android/app
           sed -i 's/flutter.minSdkVersion/23/g' build.gradle
           sed -i 's/minSdkVersion 21/minSdkVersion 23/g' build.gradle
