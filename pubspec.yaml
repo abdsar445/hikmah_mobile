@@ -23,6 +23,9 @@ dependencies:
   intl: any
   permission_handler: any
   shared_preferences: any
+  flutter_local_notifications: any
+  flutter_native_timezone: any
+  timezone: any
 
 dev_dependencies:
   flutter_test:

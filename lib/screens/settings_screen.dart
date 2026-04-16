@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'login_screen.dart';
 import '../main.dart'; // ThemeNotifier
+import '../services/notification_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,6 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _dailyHadithEnabled = true;
   bool _prayerReminderEnabled = false;
 
+  final NotificationService _notificationService = NotificationService();
+
   String userName = "Hikmah User";
   String userEmail = "user@example.com";
   File? _profileImage;
@@ -34,6 +37,97 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _initData() async {
     await _getUserData();
     await _loadProfileImage();
+    await _loadNotificationPreferences();
+  }
+
+  Future<void> _loadNotificationPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool dailyEnabled = prefs.getBool('daily_hadith_enabled') ?? false;
+    final bool prayerEnabled = prefs.getBool('prayer_reminder_enabled') ?? false;
+
+    if (mounted) {
+      setState(() {
+        _dailyHadithEnabled = dailyEnabled;
+        _prayerReminderEnabled = prayerEnabled;
+      });
+    }
+
+    if (dailyEnabled) {
+      await _notificationService.scheduleDailyHadithNotification();
+    }
+
+    if (prayerEnabled) {
+      await _notificationService.schedulePrayerNotifications();
+    }
+  }
+
+  Future<void> _saveNotificationPreference(String key, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
+  }
+
+  Future<void> _onDailyHadithChanged(bool isEnabled) async {
+    setState(() {
+      _dailyHadithEnabled = isEnabled;
+    });
+    await _saveNotificationPreference('daily_hadith_enabled', isEnabled);
+
+    if (isEnabled) {
+      await _notificationService.scheduleDailyHadithNotification();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Daily Hadith notifications enabled.')),
+        );
+      }
+    } else {
+      await _notificationService.cancelDailyHadithNotification();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Daily Hadith notifications disabled.')),
+        );
+      }
+    }
+  }
+
+  Future<void> _onPrayerReminderChanged(bool isEnabled) async {
+    setState(() {
+      _prayerReminderEnabled = isEnabled;
+    });
+    await _saveNotificationPreference('prayer_reminder_enabled', isEnabled);
+
+    if (isEnabled) {
+      final scheduled = await _notificationService.schedulePrayerNotifications();
+      if (!scheduled) {
+        if (mounted) {
+          setState(() {
+            _prayerReminderEnabled = false;
+          });
+        }
+        await _saveNotificationPreference('prayer_reminder_enabled', false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Unable to schedule prayer alerts. Please enable location services and try again.',
+              ),
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Prayer reminders enabled.')),
+          );
+        }
+      }
+    } else {
+      await _notificationService.cancelPrayerNotifications();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Prayer reminders disabled.')),
+        );
+      }
+    }
   }
 
   // --- 1. LOAD USER DATA ---
@@ -428,7 +522,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   'Daily Hadith',
                   Colors.redAccent,
                   _dailyHadithEnabled,
-                  (v) => setState(() => _dailyHadithEnabled = v),
+                  _onDailyHadithChanged,
                 ),
                 _buildSwitchTile(
                   context,
@@ -436,7 +530,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   'Prayer Alerts',
                   Colors.teal,
                   _prayerReminderEnabled,
-                  (v) => setState(() => _prayerReminderEnabled = v),
+                  _onPrayerReminderChanged,
                 ),
 
                 const SizedBox(height: 20),
