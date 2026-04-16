@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <--- YEH ZAROORI HAI
 import 'firebase_options.dart'; // <--- FIREBASE DART CONFIG
-import 'services/notification_service.dart';
 
 // --- IMPORTS ---
 import 'screens/splash_screen.dart';
@@ -33,7 +32,6 @@ void main() async {
     themeNotifier.value = ThemeMode.dark;
   }
 
-  await NotificationService().init();
   runApp(const HikmahApp());
 }
 
